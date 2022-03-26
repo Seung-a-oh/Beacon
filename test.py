@@ -24,7 +24,7 @@ def calculateDistance(rssi) :
 
 def simpleDistance(rssi):
     TxPower = 41
-    return 10 ** ((TxPower - rssi )/(10/4)) # 4 = n : 실내공간
+    return 10 ** ((TxPower - rssi )/(10*4)) # 4 = n : 실내공간
 
 
 dev_id = 0
@@ -43,7 +43,8 @@ while True:
         returnedList = blescan.parse_events(sock, 10)
         print "----------"
         for beacon in returnedList:
-                if beacon[:17] == '00:19:01:70:81:': #특정 비콘을 선택해서 출력
+                #if beacon[:17] == '00:19:01:70:81:': #특정 비콘을 선택해서 출력
+                if beacon[:5] =='00:19':
                         rssi = beacon[66:]
                         print beacon
                         print "rssi :  %s" %rssi
