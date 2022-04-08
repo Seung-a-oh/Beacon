@@ -74,7 +74,7 @@ def find_pair(mac):
 
 
 
-best = []
+best = []   # 현재 위치(그룹)을 모아 놓은 리스트
 if __name__ == '__main__':
     try:
         sock = bluez.hci_open_dev(dev_id)
@@ -99,15 +99,11 @@ if __name__ == '__main__':
             # print(beacon_list)
 
             pair = []       # 비콘의 맥, 그룹, rssi
-            if len(beacon_list) == 15:
+            if len(beacon_list) == 13:
                 for g in beacon_list:
-                    # gg = g.split(",")
                     pair.append([g[0],find_pair(g[0]),g[1]])
-                # print("---------------------------")
-                # print("pair",pair)
-                # print("---------------------------")
 
-                result = []
+                result = []     # 그룹, rssi
                 i = 0
                 for j in pair:
                     for k in pair[i+1:]:
@@ -116,26 +112,17 @@ if __name__ == '__main__':
                             aver = int((k[1]+j[1])//2)
                             result.append([j[2],aver])
                     i += 1
-                # print(result)
-                if len(result) > 0:
+                    
+                if len(result) > 0:         # 비콘 그룹을 찾았을 때
                     group = max(result)
                     print("group: ",group)
                     best.append(group[1])
-                    print(best)
-                else:
-                    sorted_pair = pair.sort(key=lambda x : (x[2],x[0],x[1]), reverse = True)
-                    print(sorted_pair)
-                    # print(sorted_pair[0])
-                    # print("empty")
-                # print("현 위치:", )
+
                 beacon_list = []
 
-                if len(best) == 3:
-                    best_count = Counter(best)
-                    best_count.most_common(1)
-                    print("oooooooooooooooooooooooooooo")
-                    print("my location",best_count[0])
-                    print("oooooooooooooooooooooooooooo")
+                if len(best) == 3:          # 현위치 3개가 모였을 때, 최빈 값 찾는 코드
+                    best_count = Counter(best).most_common(1)
+                    print("----------------------------")
+                    print("my location",best_count[0][0])
+                    print("----------------------------")
                     best = []
-
-            # print(beacon_list)
